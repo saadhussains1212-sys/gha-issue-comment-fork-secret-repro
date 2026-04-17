@@ -1,0 +1,24 @@
+name: Reusable Test
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+    secrets:
+      CANARY_SECRET:
+        required: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Run code from checked-out ref
+        env:
+          CANARY_SECRET: ${{ secrets.CANARY_SECRET }}
+        run: bash ./probe.sh
